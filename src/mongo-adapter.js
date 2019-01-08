@@ -30,14 +30,14 @@ class MongoAdapter {
         this._logger.warn('MongoAdapter::connect() disconnected');
         this._emitter.emit('disconnected');
       });
-    // this._connection.on('disconnected', () => {
   }
 
   disconnect () {
     return new Promise((resolve, reject) => {
       this._connection.close(true, () => {
-        this._connection = null;
-        this._emitter.emit('disconnected');
+        delete this._connection;
+        delete this._db;
+        this._emitter.emit('closed');
         resolve();
       });
     });
