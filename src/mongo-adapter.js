@@ -11,8 +11,6 @@ class MongoAdapter {
     this._logger = logger;
     this._config = Object.assign({}, defaults, config);
     this._connectionOptions = Object.assign({
-      keepAlive: true,
-      reconnectTries: this._config.reconnectTries,
       useNewUrlParser: true
     }, config.options);
 
@@ -20,16 +18,21 @@ class MongoAdapter {
   }
 
   connect () {
-    return MongoClient.connect(this._config.uri, this._connectionOptions)
+    const connection = MongoClient.connect(this._config.uri, this._connectionOptions)
       .then((connection) => {
+        this._emitter.emit('connected');
+
+        connection.on('disconnected', () => {
+          this._logger.warn('MongooseAdapter::connect() disconnected');
+          this._emitter.emit('disconnected');
+        });
+
         this._connection = connection;
         this._db = this._connection.db();
         this._logger.info('MongoAdapter::connect() connected');
-      })
-      .catch(() => {
-        this._logger.warn('MongoAdapter::connect() disconnected');
-        this._emitter.emit('disconnected');
       });
+
+    return connection;
   }
 
   disconnect () {
