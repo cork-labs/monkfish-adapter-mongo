@@ -7,15 +7,21 @@
   "editor.formatOnSave": false,
   "files.exclude": {
     "**/.git": true,
+    "**/.nyc_output": true,
     "**/coverage": true,
-    "**/node_modules": true
+    "**/logs": true,
+    "**/node_modules": true,
+    "**/dist": true
   },
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
-  "search.exclude": {
-    "**/node_modules": true,
-    "**/coverage": true
-  },
   "eslint.run": "onSave",
-  "eslint.autoFixOnSave": true
+  "eslint.autoFixOnSave": true,
+  "tslint.enable": true,
+  "tslint.autoFixOnSave": true,
+  "tslint.ignoreDefinitionFiles": true,
+  "tslint.alwaysShowStatus": true,
+  "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "#eb7202"
+  }
 }

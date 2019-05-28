@@ -22,14 +22,14 @@ class MongoAdapter {
       .then((connection) => {
         this._emitter.emit('connected');
 
-        connection.on('disconnected', () => {
-          this._logger.warn('MongooseAdapter::connect() disconnected');
-          this._emitter.emit('disconnected');
-        });
-
         this._connection = connection;
         this._db = this._connection.db();
-        this._logger.info('MongoAdapter::connect() connected');
+        this._logger.info('monkfish.adapter.mongo.connected');
+
+        connection.on('disconnected', () => {
+          this._logger.warn('monkfish.adapter.mongo.disconnected');
+          this._emitter.emit('disconnected');
+        });
       });
 
     return connection;

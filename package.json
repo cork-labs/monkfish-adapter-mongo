@@ -9,13 +9,20 @@
     "type": "git",
     "url": "https://github.com/cork-labs/monkfish-adapter-mongo.git"
   },
-  "main": "src/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "_mocha --recursive test/ --watch",
-    "lint": "eslint --fix src/ test/",
-    "test": "istanbul cover _mocha -- --recursive test/",
-    "build": "eslint src/ test/ && npm run test",
-    "coverage": "http-server coverage/lcov-report/"
+    "dev": "_mocha --require ts-node/register --watch-extensions ts --watch --recursive src/**/*.spec.* test/**/*.spec.*",
+    "lint": "tslint -p .",
+    "lint-fix": "tslint -p . --fix",
+    "test": "nyc _mocha --require ts-node/register --recursive src/**/*.spec.* test/**/*.spec.*",
+    "test-u": "nyc _mocha --require ts-node/register --recursive src/**/*.spec.*",
+    "test-i": "nyc _mocha --require ts-node/register --recursive test/**/*.spec.*",
+    "coverage": "node_modules/.bin/http-server coverage/",
+    "clean": "rm -rf .nyc_output coverage build",
+    "dist": "rm -rf dist; tsc -b src/",
+    "build": "npm run clean; npm run lint && npm run test && npm run dist",
+    "pub": "git push && npm run build && npm-bump patch"
   },
   "dependencies": {
     "@cork-labs/mixin-emitter": "^0.1.3",
@@ -23,17 +30,28 @@
     "mongodb-memory-server": "^2.9.1"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/chai-as-promised": "^7.1.0",
+    "@types/mocha": "^5.2.5",
+    "@types/mongodb": "^3.1.19",
+    "@types/mongodb-memory-server": "^1.8.0",
+    "@types/node": "^10.12.18",
+    "@types/sinon-chai": "^3.2.2",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "eslint": "^4.19.1",
-    "eslint-config-standard": "^11.0.0",
+    "eslint": "^5.12.0",
+    "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0",
-    "istanbul": "^0.4.5",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "http-server": "^0.11.1",
     "mocha": "^5.2.0",
-    "sinon": "^4.5.0",
-    "sinon-chai": "^2.14.0"
+    "nyc": "^13.1.0",
+    "sinon": "^7.2.2",
+    "sinon-chai": "^3.3.0",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.12.1",
+    "typescript": "^3.2.2"
   }
 }
